@@ -4,11 +4,6 @@ export default function AboutPanel() {
   return (
     <div className="app-card">
 
-      {/* Disclaimer */}
-      <div className="disclaimer-strip">
-        <strong>Academic scope:</strong> Closed-set identification across 15 synthetic identities (S01–S15) with open-set rejection tested on 4 unknowns (U01–U04). Not for legal, banking, or forensic use. All signatures were AI-generated to eliminate biometric privacy risks.
-      </div>
-
       {/* 1. Pipeline */}
       <div className="about-section">
         <div className="section-heading">Processing pipeline</div>
