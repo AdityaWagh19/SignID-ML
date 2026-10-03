@@ -1,8 +1,16 @@
 import React, { useState, useMemo } from 'react'
-import { RiImageLine, RiSearchEyeLine, RiInformationLine } from 'react-icons/ri'
+import { RiImageLine, RiRefreshLine } from 'react-icons/ri'
 
-export default function SamplePicker({ samples, selectedSample, onSelectSample, loading }) {
+export default function SamplePicker({ samples, selectedSample, onSelectSample, loading, onReload }) {
   const [filterIdentity, setFilterIdentity] = useState('ALL')
+  const [reloading, setReloading] = useState(false)
+
+  const handleReload = async () => {
+    if (!onReload) return
+    setReloading(true)
+    await onReload()
+    setReloading(false)
+  }
 
   const identities = useMemo(() => {
     if (!samples || samples.length === 0) return []
@@ -12,7 +20,7 @@ export default function SamplePicker({ samples, selectedSample, onSelectSample, 
 
   const filteredSamples = useMemo(() => {
     if (!samples) return []
-    if (filterIdentity === 'ALL') return samples.slice(0, 48) // Limit to initial 48 for clean render
+    if (filterIdentity === 'ALL') return samples.slice(0, 48)
     return samples.filter((s) => s.identity === filterIdentity)
   }, [samples, filterIdentity])
 
@@ -20,13 +28,21 @@ export default function SamplePicker({ samples, selectedSample, onSelectSample, 
     return (
       <div className="empty-state" style={{ padding: '2rem 1rem' }}>
         <RiImageLine className="empty-icon" />
-        <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '4px' }}>No Preloaded Samples Found</div>
-        <p className="empty-hint" style={{ maxWidth: '380px', margin: '0 auto 1rem' }}>
-          Generate the synthetic dataset using the Gemini pipeline or upload any custom signature image using the Upload tab.
+        <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '4px' }}>No Samples Loaded</div>
+        <p className="empty-hint" style={{ maxWidth: '340px', margin: '0 auto 1rem' }}>
+          Dataset samples couldn&apos;t be loaded from the server.
         </p>
-        <code style={{ fontSize: '0.75rem', background: 'var(--surface)', padding: '4px 8px', borderRadius: '4px', border: '1px solid var(--border)' }}>
-          python -m src.generate_sheets --stage first
-        </code>
+        {onReload && (
+          <button
+            className="btn btn-primary"
+            style={{ fontSize: '0.8rem', gap: '6px', display: 'inline-flex', alignItems: 'center' }}
+            onClick={handleReload}
+            disabled={reloading}
+          >
+            <RiRefreshLine style={{ fontSize: '1rem', animation: reloading ? 'spin 1s linear infinite' : 'none' }} />
+            {reloading ? 'Loading…' : 'Retry'}
+          </button>
+        )}
       </div>
     )
   }

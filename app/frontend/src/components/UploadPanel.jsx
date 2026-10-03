@@ -21,6 +21,7 @@ export default function UploadPanel({
   samples,
   selectedSample,
   onSelectSample,
+  onReloadSamples,
 }) {
   const [activeSubTab, setActiveSubTab] = useState('draw') // 'draw' | 'upload' | 'samples'
   const [isDragOver, setIsDragOver] = useState(false)
@@ -324,6 +325,7 @@ export default function UploadPanel({
           selectedSample={selectedSample}
           onSelectSample={onSelectSample}
           loading={loading}
+          onReload={onReloadSamples}
         />
       )}
     </div>

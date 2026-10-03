@@ -26,6 +26,25 @@ export default function App() {
   const [error, setError] = useState(null)
   const [backendStatus, setBackendStatus] = useState('offline')
 
+  // Fetch and set samples — retries up to 3× with 1s delay
+  const loadSamples = useCallback(async (retries = 3) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const res = await api.get('/api/samples')
+        const rawSamples = res.data.samples || []
+        if (rawSamples.length > 0) {
+          const processedSamples = rawSamples.map((s) => ({
+            ...s,
+            url: s.url.startsWith('http') ? s.url : `${API_BASE}${s.url}`,
+          }))
+          setSamples(processedSamples)
+          return
+        }
+      } catch (_) { /* ignore */ }
+      if (i < retries - 1) await new Promise((r) => setTimeout(r, 1200))
+    }
+  }, [])
+
   // Check health and load initial metadata
   useEffect(() => {
     const initApp = async () => {
@@ -60,15 +79,19 @@ export default function App() {
             url: s.url.startsWith('http') ? s.url : `${API_BASE}${s.url}`,
           }))
           setSamples(processedSamples)
+        } else {
+          // samplesRes failed (e.g. backend still loading models) — retry
+          loadSamples()
         }
       } catch (err) {
         setBackendStatus('offline')
         console.warn('API initialization error:', err)
+        loadSamples()
       }
     }
 
     initApp()
-  }, [])
+  }, [loadSamples])
 
   // Execute inference on current file with current model
   const runInference = useCallback(async (fileToPredict, modelToUse) => {
@@ -186,6 +209,7 @@ export default function App() {
               samples={samples}
               selectedSample={selectedSample}
               onSelectSample={handleSelectSample}
+              onReloadSamples={loadSamples}
             />
 
             {/* Right col: results */}
