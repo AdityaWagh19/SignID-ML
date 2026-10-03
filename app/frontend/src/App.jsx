@@ -7,6 +7,9 @@ import ResultPanel from './components/ResultPanel'
 import AboutPanel from './components/AboutPanel'
 import { RiAlertLine, RiCloseLine } from 'react-icons/ri'
 
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+const api = axios.create({ baseURL: API_BASE })
+
 export default function App() {
   const [activeTab, setActiveTab] = useState('identify') // 'identify' | 'about'
   const [selectedModel, setSelectedModel] = useState('svm')
@@ -29,9 +32,9 @@ export default function App() {
     const initApp = async () => {
       try {
         const [healthRes, modelsRes, samplesRes] = await Promise.allSettled([
-          axios.get('/api/health'),
-          axios.get('/api/models'),
-          axios.get('/api/samples'),
+          api.get('/api/health'),
+          api.get('/api/models'),
+          api.get('/api/samples'),
         ])
 
         if (healthRes.status === 'fulfilled' && healthRes.value.data.status === 'ok') {
@@ -53,7 +56,12 @@ export default function App() {
         }
 
         if (samplesRes.status === 'fulfilled') {
-          setSamples(samplesRes.value.data.samples || [])
+          const rawSamples = samplesRes.value.data.samples || []
+          const processedSamples = rawSamples.map((s) => ({
+            ...s,
+            url: s.url.startsWith('http') ? s.url : `${API_BASE}${s.url}`,
+          }))
+          setSamples(processedSamples)
         }
       } catch (err) {
         setBackendStatus('offline')
@@ -77,7 +85,7 @@ export default function App() {
       formData.append('model', modelToUse || selectedModel)
       formData.append('tau', (tauToUse ?? tau).toString())
 
-      const response = await axios.post('/api/predict', formData, {
+      const response = await api.post('/api/predict', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       })
 
