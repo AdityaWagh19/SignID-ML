@@ -1,0 +1,17 @@
+# Python – Vercel does not need these; the API is self-hosted
+requirements.txt
+src/
+tests/
+app/__init__.py
+app/api.py
+data/
+models/
+reports/
+dataset/*.csv
+docs/
+pytest.ini
+*.py
+*.pyc
+*.pyo
+__pycache__/
+.pytest_cache/
