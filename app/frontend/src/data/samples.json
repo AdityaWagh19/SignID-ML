@@ -1,0 +1,242 @@
+[
+  {
+    "identity": "S01",
+    "name": "S01_s1_c11.png",
+    "url": "/samples/S01/S01_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S01",
+    "name": "S01_s1_c12.png",
+    "url": "/samples/S01/S01_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S02",
+    "name": "S02_s1_c11.png",
+    "url": "/samples/S02/S02_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S02",
+    "name": "S02_s1_c12.png",
+    "url": "/samples/S02/S02_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S03",
+    "name": "S03_s1_c11.png",
+    "url": "/samples/S03/S03_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S03",
+    "name": "S03_s1_c12.png",
+    "url": "/samples/S03/S03_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S04",
+    "name": "S04_s1_c11.png",
+    "url": "/samples/S04/S04_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S04",
+    "name": "S04_s1_c12.png",
+    "url": "/samples/S04/S04_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S05",
+    "name": "S05_s1_c11.png",
+    "url": "/samples/S05/S05_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S05",
+    "name": "S05_s1_c12.png",
+    "url": "/samples/S05/S05_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S06",
+    "name": "S06_s1_c11.png",
+    "url": "/samples/S06/S06_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S06",
+    "name": "S06_s1_c12.png",
+    "url": "/samples/S06/S06_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S07",
+    "name": "S07_s1_c11.png",
+    "url": "/samples/S07/S07_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S07",
+    "name": "S07_s1_c12.png",
+    "url": "/samples/S07/S07_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S08",
+    "name": "S08_s1_c11.png",
+    "url": "/samples/S08/S08_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S08",
+    "name": "S08_s1_c12.png",
+    "url": "/samples/S08/S08_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S09",
+    "name": "S09_s1_c11.png",
+    "url": "/samples/S09/S09_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S09",
+    "name": "S09_s1_c12.png",
+    "url": "/samples/S09/S09_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S10",
+    "name": "S10_s1_c11.png",
+    "url": "/samples/S10/S10_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S10",
+    "name": "S10_s1_c12.png",
+    "url": "/samples/S10/S10_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S11",
+    "name": "S11_s1_c11.png",
+    "url": "/samples/S11/S11_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S11",
+    "name": "S11_s1_c12.png",
+    "url": "/samples/S11/S11_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S12",
+    "name": "S12_s1_c11.png",
+    "url": "/samples/S12/S12_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S12",
+    "name": "S12_s1_c12.png",
+    "url": "/samples/S12/S12_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S13",
+    "name": "S13_s1_c11.png",
+    "url": "/samples/S13/S13_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S13",
+    "name": "S13_s1_c12.png",
+    "url": "/samples/S13/S13_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S14",
+    "name": "S14_s1_c11.png",
+    "url": "/samples/S14/S14_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S14",
+    "name": "S14_s1_c12.png",
+    "url": "/samples/S14/S14_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S15",
+    "name": "S15_s1_c11.png",
+    "url": "/samples/S15/S15_s1_c11.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "S15",
+    "name": "S15_s1_c12.png",
+    "url": "/samples/S15/S15_s1_c12.png",
+    "isEnrolled": true
+  },
+  {
+    "identity": "U01",
+    "name": "U01_s1_c11.png",
+    "url": "/samples/U01/U01_s1_c11.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U01",
+    "name": "U01_s1_c12.png",
+    "url": "/samples/U01/U01_s1_c12.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U02",
+    "name": "U02_s1_c11.png",
+    "url": "/samples/U02/U02_s1_c11.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U02",
+    "name": "U02_s1_c12.png",
+    "url": "/samples/U02/U02_s1_c12.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U03",
+    "name": "U03_s1_c11.png",
+    "url": "/samples/U03/U03_s1_c11.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U03",
+    "name": "U03_s1_c12.png",
+    "url": "/samples/U03/U03_s1_c12.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U04",
+    "name": "U04_s1_c11.png",
+    "url": "/samples/U04/U04_s1_c11.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U04",
+    "name": "U04_s1_c12.png",
+    "url": "/samples/U04/U04_s1_c12.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U05",
+    "name": "U05_s1_c11.png",
+    "url": "/samples/U05/U05_s1_c11.png",
+    "isEnrolled": false
+  },
+  {
+    "identity": "U05",
+    "name": "U05_s1_c12.png",
+    "url": "/samples/U05/U05_s1_c12.png",
+    "isEnrolled": false
+  }
+]

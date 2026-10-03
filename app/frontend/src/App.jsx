@@ -6,6 +6,7 @@ import UploadPanel from './components/UploadPanel'
 import ResultPanel from './components/ResultPanel'
 import AboutPanel from './components/AboutPanel'
 import { RiAlertLine, RiCloseLine } from 'react-icons/ri'
+import DEFAULT_SAMPLES from './data/samples.json'
 
 const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 const api = axios.create({ baseURL: API_BASE })
@@ -16,7 +17,7 @@ export default function App() {
   const [availableModels, setAvailableModels] = useState([])
   const tau = 0.25
 
-  const [samples, setSamples] = useState([])
+  const [samples, setSamples] = useState(DEFAULT_SAMPLES)
   const [selectedSample, setSelectedSample] = useState(null)
   const [selectedFile, setSelectedFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState(null)
@@ -73,15 +74,14 @@ export default function App() {
         }
 
         if (samplesRes.status === 'fulfilled') {
-          const rawSamples = samplesRes.value.data.samples || []
-          const processedSamples = rawSamples.map((s) => ({
-            ...s,
-            url: s.url.startsWith('http') ? s.url : `${API_BASE}${s.url}`,
-          }))
-          setSamples(processedSamples)
-        } else {
-          // samplesRes failed (e.g. backend still loading models) — retry
-          loadSamples()
+          const rawSamples = samplesRes.value.data?.samples || []
+          if (rawSamples.length > 0) {
+            const processedSamples = rawSamples.map((s) => ({
+              ...s,
+              url: s.url.startsWith('http') ? s.url : `${API_BASE}${s.url}`,
+            }))
+            setSamples(processedSamples)
+          }
         }
       } catch (err) {
         setBackendStatus('offline')

@@ -90,13 +90,21 @@ def _available_models() -> list[str]:
 
 def _sample_paths() -> list[Path]:
     meta_path = DATASET / "metadata.csv"
-    if not meta_path.exists():
-        return []
-    import pandas as pd
-    meta = pd.read_csv(meta_path)
-    test = meta[(meta["split"] == "test") & (meta["qc"] == "ok")]
-    paths = [DATASET / f for f in test["file"]]
-    return [p for p in paths if p.exists()]
+    if meta_path.exists():
+        import pandas as pd
+        meta = pd.read_csv(meta_path)
+        test = meta[(meta["split"] == "test") & (meta["qc"] == "ok")]
+        paths = [DATASET / f for f in test["file"]]
+        existing = [p for p in paths if p.exists()]
+        if existing:
+            return existing
+
+    # Fallback: bundled test samples in frontend public dir (works on Vercel & offline)
+    bundled_dir = ROOT / "app" / "frontend" / "public" / "samples"
+    if bundled_dir.exists():
+        return sorted(list(bundled_dir.glob("*/*.png")))
+
+    return []
 
 
 # ──────────────────────────────────────────────────────────
@@ -140,6 +148,9 @@ def serve_sample(identity: str, filename: str):
     path = DATASET / "crops_sim" / identity / filename
     if not path.exists():
         path = DATASET / "crops" / identity / filename
+    if not path.exists():
+        # Fallback to bundled public samples
+        path = ROOT / "app" / "frontend" / "public" / "samples" / identity / filename
     if not path.exists():
         raise HTTPException(status_code=404, detail="Sample not found")
     return FileResponse(str(path), media_type="image/png")

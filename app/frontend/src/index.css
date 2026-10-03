@@ -973,3 +973,86 @@ body {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
+
+/* ── Sample Picker Styles ────────────────────────────────── */
+.sample-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(115px, 1fr));
+  gap: 10px;
+  max-height: 290px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.sample-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.sample-card:hover {
+  border-color: var(--accent-mid);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+.sample-card.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.sample-thumb {
+  width: 100%;
+  height: 52px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 4px;
+  margin-bottom: 6px;
+  pointer-events: none;
+}
+
+.sample-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+.sample-badge.enrolled {
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.sample-badge.impostor {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.form-select-sm {
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-family: inherit;
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.form-select-sm:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15);
+}
+

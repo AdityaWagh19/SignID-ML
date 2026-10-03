@@ -60,36 +60,50 @@ export default function SamplePicker({ samples, selectedSample, onSelectSample, 
           value={filterIdentity}
           onChange={(e) => setFilterIdentity(e.target.value)}
         >
-          <option value="ALL">All Identities ({samples.length} test samples)</option>
-          {identities.map((id) => (
-            <option key={id} value={id}>
-              {id}
-            </option>
-          ))}
+          <option value="ALL">All Test Samples ({samples.length} total)</option>
+          <optgroup label="Enrolled Signers (S01–S15)">
+            {identities.filter(id => id.startsWith('S')).map((id) => (
+              <option key={id} value={id}>
+                {id} (Enrolled Signer)
+              </option>
+            ))}
+          </optgroup>
+          {identities.some(id => id.startsWith('U')) && (
+            <optgroup label="Unknown Impostors (U01–U05)">
+              {identities.filter(id => id.startsWith('U')).map((id) => (
+                <option key={id} value={id}>
+                  {id} (Unknown / Impostor)
+                </option>
+              ))}
+            </optgroup>
+          )}
         </select>
         <span style={{ fontSize: '0.72rem', color: 'var(--muted)', marginLeft: 'auto' }}>
-          Click any sample to test
+          Click any sample to evaluate
         </span>
       </div>
 
       {/* Grid of sample thumbnails */}
       <div className="sample-grid">
         {filteredSamples.map((sample) => {
-          const isSelected = selectedSample && selectedSample.url === sample.url
+          const isSelected = selectedSample && (selectedSample.url === sample.url || selectedSample.name === sample.name)
+          const isImpostor = sample.identity.startsWith('U')
           return (
             <div
               key={`${sample.identity}_${sample.name}`}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+              className={`sample-card ${isSelected ? 'selected' : ''}`}
+              onClick={() => onSelectSample(sample)}
+              title={`${sample.identity} (${isImpostor ? 'Impostor' : 'Enrolled'}) — Click to test`}
             >
               <img
                 src={sample.url}
                 alt={`${sample.identity} ${sample.name}`}
-                className={`sample-thumb ${isSelected ? 'selected' : ''}`}
-                onClick={() => onSelectSample(sample)}
+                className="sample-thumb"
                 loading="lazy"
-                title={`${sample.identity} - ${sample.name}`}
               />
-              <span className="sample-identity">{sample.identity}</span>
+              <span className={`sample-badge ${isImpostor ? 'impostor' : 'enrolled'}`}>
+                {sample.identity} {isImpostor ? '• unk' : ''}
+              </span>
             </div>
           )
         })}
