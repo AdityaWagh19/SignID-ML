@@ -143,7 +143,7 @@ class Predictor:
             probs = self._model.predict(x, verbose=0)[0]
 
         top_idx = np.argsort(-probs)[:3]
-        top3 = [(self.classes[i], float(probs[i])) for i in top_idx]
+        top3 = [(self.classes.get(int(i), f"S{int(i)+1:02d}"), float(probs[i])) for i in top_idx]
 
         max_conf = float(probs.max())
         recognised = max_conf >= self.tau

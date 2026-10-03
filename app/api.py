@@ -188,43 +188,47 @@ async def predict(
 
     try:
         predictor = _get_predictor(model)
+
+        # Override threshold if provided
+        original_tau = predictor.tau
+        if tau is not None:
+            predictor.tau = float(tau)
+
+        t0 = time.perf_counter()
+        result = predictor.identify(img)
+        ms = round((time.perf_counter() - t0) * 1000)
+
+        # Compute comparative results across all 5 models
+        all_models = identify_all_models(img, tau=predictor.tau)
+
+        predictor.tau = original_tau  # restore
+
+        # Encode preprocessed image as base64 PNG
+        import base64
+        pre = (result["preprocessed"] * 255).clip(0, 255).astype(np.uint8)
+        _, buf = cv2.imencode(".png", pre)
+        pre_b64 = base64.b64encode(buf.tobytes()).decode()
+
+        return {
+            "prediction":   result["prediction"],
+            "candidate":    result.get("candidate", result["prediction"]),
+            "confidence":   round(result["confidence"], 4),
+            "recognised":   result["recognised"],
+            "top3": [
+                {"id": sid, "confidence": round(conf, 4)}
+                for sid, conf in result["top3"]
+            ],
+            "all_models":   all_models,
+            "preprocessed_b64": pre_b64,
+            "model_used": model,
+            "ms": ms,
+        }
     except FileNotFoundError as e:
         raise HTTPException(status_code=404, detail=str(e))
-
-    # Override threshold if provided
-    original_tau = predictor.tau
-    if tau is not None:
-        predictor.tau = float(tau)
-
-    t0 = time.perf_counter()
-    result = predictor.identify(img)
-    ms = round((time.perf_counter() - t0) * 1000)
-
-    # Compute comparative results across all 5 models
-    all_models = identify_all_models(img, tau=predictor.tau)
-
-    predictor.tau = original_tau  # restore
-
-    # Encode preprocessed image as base64 PNG
-    import base64
-    pre = (result["preprocessed"] * 255).clip(0, 255).astype(np.uint8)
-    _, buf = cv2.imencode(".png", pre)
-    pre_b64 = base64.b64encode(buf.tobytes()).decode()
-
-    return {
-        "prediction":   result["prediction"],
-        "candidate":    result.get("candidate", result["prediction"]),
-        "confidence":   round(result["confidence"], 4),
-        "recognised":   result["recognised"],
-        "top3": [
-            {"id": sid, "confidence": round(conf, 4)}
-            for sid, conf in result["top3"]
-        ],
-        "all_models":   all_models,
-        "preprocessed_b64": pre_b64,
-        "model_used": model,
-        "ms": ms,
-    }
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Inference error: {str(e)}")
 
 
 # ──────────────────────────────────────────────────────────
