@@ -55,7 +55,7 @@ export default function UploadPanel({
 
   return (
     <div className="app-card">
-      <div className="card-title">Input Signature</div>
+      <div className="card-label">Input</div>
 
       {/* Tab Switcher: Upload vs Preloaded Samples */}
       <div className="input-tabs">
@@ -95,9 +95,9 @@ export default function UploadPanel({
               />
               <RiUploadCloud2Line className="upload-icon" />
               <div className="upload-label">
-                Drag & drop signature image here, or <strong>browse file</strong>
+                Drop image here or <strong>browse</strong>
               </div>
-              <div className="upload-hint">Supports PNG, JPG, JPEG (Grayscale or Color)</div>
+              <div className="upload-hint">PNG · JPG · JPEG</div>
             </div>
           ) : (
             <div>

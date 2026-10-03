@@ -1,131 +1,89 @@
 import React from 'react'
-import {
-  RiAlertLine,
-  RiCpuLine,
-  RiSpeedUpLine,
-  RiFunctionLine,
-  RiShieldCheckLine,
-  RiCheckLine
-} from 'react-icons/ri'
 
 export default function AboutPanel() {
   return (
     <div className="app-card">
-      <div className="card-title">System Architecture & Methodology</div>
 
-      {/* Ethical / Academic Disclaimer */}
+      {/* Disclaimer */}
       <div className="disclaimer-strip">
-        <RiAlertLine style={{ fontSize: '1.25rem', flexShrink: 0, marginTop: '2px' }} />
-        <div>
-          <strong>Academic & Biometric Scope Disclaimer:</strong>
-          <div>
-            This system evaluates closed-set identification across 15 enrolled simulated identities (S01–S15) with open-set rejection tested against 4 unknown identities (U01–U04) for educational ML demonstration. It is not an open-set biometric verification engine and must not be used for legal, banking, or forensic authentication. All signature samples were synthetically synthesized via Google Gemini to completely eliminate privacy and biometric data misuse risks.
-          </div>
-        </div>
+        <strong>Academic scope:</strong> Closed-set identification across 15 synthetic identities (S01–S15) with open-set rejection tested on 4 unknowns (U01–U04). Not for legal, banking, or forensic use. All signatures were AI-generated to eliminate biometric privacy risks.
       </div>
 
-      {/* 4 Pipeline Stages */}
-      <div className="about-section" style={{ marginBottom: '1.5rem' }}>
-        <h6>1. End-to-End Processing Pipeline</h6>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px', marginTop: '8px' }}>
-          <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <strong style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Stage 1: Ingestion & Binarization</strong>
-            <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: 'var(--muted)' }}>
-              RGB/Grayscale input converted to 8-bit. Otsu thresholding separates stroke ink from white paper background.
-            </p>
-          </div>
-          <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <strong style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Stage 2: Bounding Box Centering</strong>
-            <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: 'var(--muted)' }}>
-              Non-zero stroke bounding box extracted, aspect-ratio preserved, and centered inside 128×128 canvas with 4px padding.
-            </p>
-          </div>
-          <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <strong style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Stage 3: Classifier Forward Pass</strong>
-            <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: 'var(--muted)' }}>
-              Evaluated using either Custom CNN (3 conv blocks), MobileNetV2 transfer learning, or HOG + Linear SVM.
-            </p>
-          </div>
-          <div style={{ background: 'var(--bg)', padding: '10px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-            <strong style={{ fontSize: '0.8rem', color: 'var(--accent)' }}>Stage 4: Thresholded Rejection (τ)</strong>
-            <p style={{ margin: '4px 0 0', fontSize: '0.75rem', color: 'var(--muted)' }}>
-              Softmax posterior distribution is evaluated. If max confidence &lt; τ, output is labeled "Not recognised".
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Model Benchmark Architecture Matrix */}
-      <div className="about-section" style={{ marginBottom: '1.5rem' }}>
-        <h6>2. Model Comparison Matrix</h6>
-        <div style={{ overflowX: 'auto' }}>
-          <table className="top3-table" style={{ marginTop: '4px' }}>
-            <thead>
-              <tr>
-                <th>Model</th>
-                <th>Feature Space</th>
-                <th>Parameters</th>
-                <th>Strengths</th>
-                <th>Target Metric</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <strong style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <RiFunctionLine style={{ color: 'var(--accent)' }} /> HOG + Linear SVM
-                  </strong>
-                </td>
-                <td>Histogram of Oriented Gradients (1,764 dims)</td>
-                <td>15 hyperplanes (C=0.1)</td>
-                <td>Linear decision boundary, fast & balanced</td>
-                <td><strong>80.0% Acc / 75.0% F1</strong></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <RiShieldCheckLine style={{ color: '#10b981' }} /> HOG + Random Forest
-                  </strong>
-                </td>
-                <td>Histogram of Oriented Gradients (1,764 dims)</td>
-                <td>100 trees (ensemble)</td>
-                <td>Highest Top-3 confidence & robustness</td>
-                <td><strong>80.0% Acc / 83.3% Top-3 / 76.3% F1</strong></td>
-              </tr>
-              <tr>
-                <td>
-                  <strong style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <RiCpuLine style={{ color: 'var(--accent)' }} /> Custom CNN
-                  </strong>
-                </td>
-                <td>End-to-end 128×128 grayscale</td>
-                <td>~260,000</td>
-                <td>Deep representation (needs &gt;1k samples/class)</td>
-                <td>16.7% Acc (Overfits on ~240 train imgs)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Dataset Specifications */}
+      {/* 1. Pipeline */}
       <div className="about-section">
-        <h6>3. Synthetic Dataset Specifications</h6>
-        <ul style={{ paddingLeft: '1.25rem', margin: 0, fontSize: '0.8rem', color: 'var(--muted)', lineHeight: '1.7' }}>
-          <li>
-            <strong>Volume:</strong> 15 enrolled student identities (S01 to S15, 48 signatures each = 720 images) plus 4 unknown identities (U01 to U04, 12 signatures each = 48 images) for open-set rejection testing.
-          </li>
-          <li>
-            <strong>Variation Axes:</strong> Natural speed variations, pen pressure differences, slight rotation (±5°), slant variations, and synthetic ink bleed.
-          </li>
-          <li>
-            <strong>Splits:</strong> Stratified per identity — 10 training samples (66.7%), 2 validation samples (13.3%), 3 test samples (20.0%).
-          </li>
-          <li>
-            <strong>Quality Control:</strong> Automatic bounding box aspect validation (&gt;10px height/width) and contrast checks.
-          </li>
-        </ul>
+        <div className="section-heading">Processing pipeline</div>
+        <div className="pipeline-flow">
+          <div className="pipeline-step">
+            <div className="pipeline-step-num">1</div>
+            <div className="pipeline-step-name">Binarize</div>
+            <div className="pipeline-step-detail">Otsu threshold separates ink from background</div>
+          </div>
+          <div className="pipeline-step">
+            <div className="pipeline-step-num">2</div>
+            <div className="pipeline-step-name">Centre</div>
+            <div className="pipeline-step-detail">Stroke bounding box centred in 128×128 canvas</div>
+          </div>
+          <div className="pipeline-step">
+            <div className="pipeline-step-num">3</div>
+            <div className="pipeline-step-name">Classify</div>
+            <div className="pipeline-step-detail">HOG features → SVM / RF, or CNN forward pass</div>
+          </div>
+          <div className="pipeline-step">
+            <div className="pipeline-step-num">4</div>
+            <div className="pipeline-step-name">Reject</div>
+            <div className="pipeline-step-detail">Confidence &lt; τ → flagged as unrecognised</div>
+          </div>
+        </div>
       </div>
+
+      {/* 2. Model performance */}
+      <div className="about-section">
+        <div className="section-heading">Model performance</div>
+        <div className="model-stat-grid">
+          <div className="model-stat-cell">
+            <div className="model-stat-name">HOG + Linear SVM</div>
+            <div className="model-stat-acc">80%</div>
+            <div className="model-stat-sub">Top-1 · F1 75%</div>
+          </div>
+          <div className="model-stat-cell best">
+            <div className="model-stat-name">HOG + Random Forest</div>
+            <div className="model-stat-acc">80%</div>
+            <div className="model-stat-sub">Top-3 83% · F1 76%</div>
+          </div>
+          <div className="model-stat-cell">
+            <div className="model-stat-name">Custom CNN</div>
+            <div className="model-stat-acc">17%</div>
+            <div className="model-stat-sub">Overfits on small dataset</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. Confusion matrices */}
+      <div className="about-section">
+        <div className="section-heading">Confusion matrices</div>
+        <div className="figures-grid">
+          <div className="figure-card">
+            <img src="/figures/cm_svm.png" alt="SVM confusion matrix" loading="lazy" />
+            <div className="figure-caption">HOG + Linear SVM</div>
+          </div>
+          <div className="figure-card">
+            <img src="/figures/cm_rf.png" alt="Random Forest confusion matrix" loading="lazy" />
+            <div className="figure-caption">HOG + Random Forest</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Open-set rejection curve */}
+      <div className="about-section">
+        <div className="section-heading">Open-set rejection curve</div>
+        <div className="figures-grid">
+          <div className="figure-card figure-full">
+            <img src="/figures/reject_curve.png" alt="Rejection curve" loading="lazy" />
+            <div className="figure-caption">Accuracy vs Rejection Rate as threshold τ varies — trade-off between coverage and correctness</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }
