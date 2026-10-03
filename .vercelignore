@@ -1,17 +1,11 @@
-# Python – Vercel does not need these; the API is self-hosted
+# Python backend — Vercel only needs the frontend
 requirements.txt
-src/
-tests/
 app/__init__.py
 app/api.py
 data/
 models/
 reports/
-dataset/*.csv
+dataset/
 docs/
 pytest.ini
-*.py
-*.pyc
-*.pyo
-__pycache__/
-.pytest_cache/
+tests/
