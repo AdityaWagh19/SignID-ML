@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+import src.compat  # noqa: F401 — register sklearn version compatibility shims
 from src.config import DATASET, MODELS
 from src.predict import Predictor, identify_all_models
 

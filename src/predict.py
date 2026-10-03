@@ -10,6 +10,7 @@ import cv2
 import joblib
 import numpy as np
 
+import src.compat  # noqa: F401 — register sklearn version compatibility shims
 from src.config import MODELS
 from src.features import hog_features
 from src.preprocess import preprocess_signature
