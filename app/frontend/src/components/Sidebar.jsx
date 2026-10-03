@@ -1,73 +1,119 @@
 import React from 'react'
 import {
-  RiCpuLine,
-  RiSpeedUpLine,
-  RiFunctionLine,
   RiEqualizerLine,
+  RiFunctionLine,
+  RiCompass3Line,
+  RiRadarLine,
+  RiLineChartLine,
+  RiShieldCheckLine,
+  RiCheckLine,
 } from 'react-icons/ri'
 
-const MODELS = [
-  { id: 'svm',       name: 'Linear SVM',     sub: 'HOG features',       icon: RiFunctionLine  },
-  { id: 'rf',        name: 'Random Forest',  sub: 'HOG + ensemble',     icon: RiEqualizerLine },
-  { id: 'cnn',       name: 'Custom CNN',     sub: '3 conv blocks',      icon: RiCpuLine       },
-  { id: 'mobilenet', name: 'MobileNetV2',   sub: 'Transfer learning',  icon: RiSpeedUpLine   },
+export const ALL_MODELS = [
+  {
+    id: 'rf',
+    name: 'Random Forest',
+    acc: '80.0%',
+    type: 'HOG + Ensemble Trees',
+    tag: 'Best Overall',
+    icon: RiEqualizerLine,
+  },
+  {
+    id: 'svm',
+    name: 'Linear SVM',
+    acc: '80.0%',
+    type: 'HOG + Linear Hyperplane',
+    tag: 'High Precision',
+    icon: RiFunctionLine,
+  },
+  {
+    id: 'lr',
+    name: 'Logistic Regression',
+    acc: '73.3%',
+    type: 'HOG + Softmax Regression',
+    tag: 'Probabilistic',
+    icon: RiLineChartLine,
+  },
+  {
+    id: 'knn',
+    name: 'K-Nearest Neighbors',
+    acc: '70.0%',
+    type: 'HOG + Euclidean (k=3)',
+    tag: 'Instance-Based',
+    icon: RiRadarLine,
+  },
+  {
+    id: 'gb',
+    name: 'Gradient Boosting',
+    acc: '73.3%',
+    type: 'HOG + Sequential Trees',
+    tag: 'Boosted',
+    icon: RiCompass3Line,
+  },
 ]
 
 export default function Sidebar({
   selectedModel,
   setSelectedModel,
-  tau,
-  setTau,
-  onResetTau,
-  defaultTau,
+  availableModels = [],
 }) {
   return (
-    <aside className="sidebar">
+    <aside className="app-sidebar">
+      <div className="sidebar-card">
+        <div className="sidebar-header">
+          <div className="sidebar-title">Evaluated Models</div>
+          <span className="sidebar-count">{ALL_MODELS.length} trained</span>
+        </div>
+        <p className="sidebar-subtitle">
+          Select a classifier to evaluate the signature:
+        </p>
 
-      {/* Model Selector */}
-      <div className="app-card">
-        <div className="card-label">Model</div>
-        <div className="model-grid">
-          {MODELS.map((m) => {
+        <div className="sidebar-model-list">
+          {ALL_MODELS.map((m) => {
             const Icon = m.icon
+            const isSelected = selectedModel === m.id
             return (
               <button
                 key={m.id}
                 type="button"
-                className={`model-tile ${selectedModel === m.id ? 'active' : ''}`}
+                className={`sidebar-model-item ${isSelected ? 'active' : ''}`}
                 onClick={() => setSelectedModel(m.id)}
               >
-                <Icon className="model-tile-icon" />
-                <span className="model-tile-name">{m.name}</span>
-                <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>{m.sub}</span>
+                <div className="model-item-header">
+                  <div className="model-icon-box">
+                    <Icon />
+                  </div>
+                  <div className="model-item-info">
+                    <div className="model-item-title-row">
+                      <span className="model-item-name">{m.name}</span>
+                      {isSelected && <RiCheckLine className="model-check-icon" />}
+                    </div>
+                    <span className="model-item-tech">{m.type}</span>
+                  </div>
+                </div>
+
+                <div className="model-item-footer">
+                  <span className="model-acc-badge">{m.acc} Test Acc</span>
+                  <span className="model-tag-text">{m.tag}</span>
+                </div>
               </button>
             )
           })}
         </div>
-      </div>
 
-      {/* Threshold */}
-      <div className="app-card">
-        <div className="card-label">Rejection Threshold</div>
-        <div className="tau-header">
-          <span className="tau-value">τ = {tau.toFixed(2)}</span>
-          <button type="button" className="tau-reset" onClick={onResetTau}>
-            reset ({defaultTau.toFixed(2)})
-          </button>
+        {/* Quiet Security Guarantee (replaces slider) */}
+        <div className="sidebar-security-badge">
+          <div className="security-icon-wrap">
+            <RiShieldCheckLine />
+          </div>
+          <div>
+            <div className="security-title">Open-Set Rejection Active</div>
+            <div className="security-desc">
+              Calibrated safety threshold (τ = 0.44). Unauthorized impostors are rejected automatically.
+            </div>
+          </div>
         </div>
-        <input
-          type="range"
-          min="0.00"
-          max="1.00"
-          step="0.01"
-          value={tau}
-          onChange={(e) => setTau(parseFloat(e.target.value))}
-        />
-        <p className="tau-hint">
-          Signatures with confidence below τ are rejected as <strong>unrecognised</strong>.
-        </p>
       </div>
-
     </aside>
   )
 }

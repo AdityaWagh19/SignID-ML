@@ -14,8 +14,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('identify') // 'identify' | 'about'
   const [selectedModel, setSelectedModel] = useState('svm')
   const [availableModels, setAvailableModels] = useState([])
-  const [defaultTau, setDefaultTau] = useState(0.50)
-  const [tau, setTau] = useState(0.50)
+  const [defaultTau] = useState(0.44)
+  const tau = 0.44
 
   const [samples, setSamples] = useState([])
   const [selectedSample, setSelectedSample] = useState(null)
@@ -44,12 +44,8 @@ export default function App() {
         }
 
         if (modelsRes.status === 'fulfilled') {
-          const { models, default_tau } = modelsRes.value.data
+          const { models } = modelsRes.value.data
           setAvailableModels(models || [])
-          if (default_tau) {
-            setDefaultTau(default_tau)
-            setTau(default_tau)
-          }
           if (models && models.length > 0 && !models.includes('cnn')) {
             setSelectedModel(models[0])
           }
@@ -146,21 +142,9 @@ export default function App() {
     }
   }
 
-  // Handle threshold change
-  const handleTauChange = (newTau) => {
-    setTau(newTau)
-    if (result && selectedFile) {
-      // Update result state locally or rerun
-      runInference(selectedFile, selectedModel, newTau)
-    }
-  }
-
-  const handleResetTau = () => {
-    setTau(defaultTau)
-    if (selectedFile) {
-      runInference(selectedFile, selectedModel, defaultTau)
-    }
-  }
+  // Tau is fixed at 0.44 (open-set rejection threshold)
+  const handleTauChange = () => {}
+  const handleResetTau = () => {}
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -229,7 +213,6 @@ export default function App() {
                 result={result}
                 previewUrl={previewUrl}
                 loading={loading}
-                tau={tau}
               />
             </>
           ) : (

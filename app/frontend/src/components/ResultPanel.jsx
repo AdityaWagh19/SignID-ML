@@ -1,7 +1,9 @@
 import React from 'react'
 import { RiCheckLine, RiAlertLine, RiSearchEyeLine } from 'react-icons/ri'
 
-export default function ResultPanel({ result, previewUrl, loading, tau }) {
+const DEFAULT_TAU = 0.44
+
+export default function ResultPanel({ result, previewUrl, loading }) {
   if (loading) {
     return (
       <div className="app-card" style={{ minHeight: 360, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -29,7 +31,8 @@ export default function ResultPanel({ result, previewUrl, loading, tau }) {
     )
   }
 
-  const { prediction, confidence, recognised, top3, preprocessed_b64, model_used, ms } = result
+  const { prediction, confidence, recognised, top3, preprocessed_b64, model_used, ms, all_models } = result
+  const tau = DEFAULT_TAU
   const confPct = Math.round(confidence * 1000) / 10
 
   return (
@@ -119,6 +122,45 @@ export default function ResultPanel({ result, previewUrl, loading, tau }) {
               })}
             </tbody>
           </table>
+        </>
+      )}
+
+      {/* All-models comparison */}
+      {all_models?.length > 0 && (
+        <>
+          <div className="card-label" style={{ marginTop: '1.5rem', marginBottom: '0.75rem' }}>
+            All model results
+          </div>
+          <div className="all-models-grid">
+            {all_models.map((m) => {
+              const mPct = Math.round(m.confidence * 1000) / 10
+              const isActive = m.id === model_used
+              return (
+                <div
+                  key={m.id}
+                  className={`model-result-card ${m.recognised ? 'recognised' : 'unknown'} ${isActive ? 'is-selected' : ''}`}
+                >
+                  <div className="mrc-header">
+                    <span className="mrc-name">{m.name}</span>
+                    {isActive && <span className="mrc-active-badge">selected</span>}
+                  </div>
+                  <div className="mrc-pred">{m.prediction}</div>
+                  <div className="mrc-bar-wrap">
+                    <div className="mrc-bar">
+                      <div
+                        className={`mrc-bar-fill ${m.recognised ? '' : 'low'}`}
+                        style={{ width: `${Math.min(mPct, 100)}%` }}
+                      />
+                    </div>
+                    <span className="mrc-pct">{mPct}%</span>
+                  </div>
+                  <span className={`mrc-verdict ${m.recognised ? 'ok' : 'rej'}`}>
+                    {m.recognised ? '✓ Recognised' : '✗ Rejected'}
+                  </span>
+                </div>
+              )
+            })}
+          </div>
         </>
       )}
 

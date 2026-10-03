@@ -29,7 +29,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from src.config import DATASET, MODELS
-from src.predict import Predictor
+from src.predict import Predictor, identify_all_models
 
 
 app = FastAPI(title="Signature Identification API", version="1.0.0")
@@ -67,11 +67,20 @@ def _get_predictor(model_type: str) -> Predictor:
 # ──────────────────────────────────────────────────────────
 
 def _available_models() -> list[str]:
+    """List all available models in priority order."""
     available = []
+    # 5 Classical models
+    if (MODELS / "rf.joblib").exists() or (MODELS / "best_classical.joblib").exists():
+        available.append("rf")
     if (MODELS / "svm.joblib").exists():
         available.append("svm")
-    if (MODELS / "best_classical.joblib").exists():
-        available.append("rf")
+    if (MODELS / "lr.joblib").exists():
+        available.append("lr")
+    if (MODELS / "knn.joblib").exists():
+        available.append("knn")
+    if (MODELS / "gb.joblib").exists():
+        available.append("gb")
+    # Optional deep learning models
     if (MODELS / "cnn.weights.h5").exists() or (MODELS / "cnn.keras").exists():
         available.append("cnn")
     if (MODELS / "mobilenet.weights.h5").exists() or (MODELS / "mobilenet.keras").exists():
@@ -153,7 +162,7 @@ async def predict(
         model_used  : str
         ms          : int   — inference time
     """
-    _ALLOWED = ("svm", "rf", "cnn", "mobilenet")
+    _ALLOWED = ("svm", "rf", "knn", "lr", "gb", "cnn", "mobilenet")
     if model not in _ALLOWED:
         raise HTTPException(status_code=400, detail=f"Unknown model '{model}'. Choose from {_ALLOWED}")
 
@@ -168,7 +177,7 @@ async def predict(
     try:
         predictor = _get_predictor(model)
     except FileNotFoundError as e:
-        raise HTTPException(status_code=503, detail=str(e))
+        raise HTTPException(status_code=404, detail=str(e))
 
     # Override threshold if provided
     original_tau = predictor.tau
@@ -178,6 +187,9 @@ async def predict(
     t0 = time.perf_counter()
     result = predictor.identify(img)
     ms = round((time.perf_counter() - t0) * 1000)
+
+    # Compute comparative results across all 5 models
+    all_models = identify_all_models(img, tau=predictor.tau)
 
     predictor.tau = original_tau  # restore
 
@@ -195,6 +207,7 @@ async def predict(
             {"id": sid, "confidence": round(conf, 4)}
             for sid, conf in result["top3"]
         ],
+        "all_models":   all_models,
         "preprocessed_b64": pre_b64,
         "model_used": model,
         "ms": ms,
