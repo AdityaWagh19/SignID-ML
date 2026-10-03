@@ -12,7 +12,7 @@ venv/
 
 # Node.js
 node_modules/
-app/frontend/node_modules/
+package-lock.json
 
 # Large dataset files (keep locally, not in Git)
 dataset/raw_sheets/
@@ -34,4 +34,3 @@ models/*.h5
 .idea/
 .DS_Store
 Thumbs.db
-

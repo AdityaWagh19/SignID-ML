@@ -1,0 +1,10 @@
+{
+  "name": "signid-ml",
+  "version": "1.0.0",
+  "description": "SignID: Offline Signature Identification with Open-Set Impostor Rejection",
+  "private": true,
+  "scripts": {
+    "build": "cd app/frontend && npm install && npm run build",
+    "dev": "cd app/frontend && npm run dev"
+  }
+}
