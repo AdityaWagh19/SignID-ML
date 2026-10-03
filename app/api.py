@@ -89,20 +89,30 @@ def _available_models() -> list[str]:
 
 
 def _sample_paths() -> list[Path]:
+    # Use bundled manifest (1 curated sample per identity)
+    manifest_path = ROOT / "app" / "frontend" / "src" / "data" / "samples.json"
+    if manifest_path.exists():
+        try:
+            with open(manifest_path, "r", encoding="utf-8") as f:
+                manifest = json.load(f)
+            bundled_dir = ROOT / "app" / "frontend" / "public"
+            paths = [bundled_dir / s["url"].lstrip("/") for s in manifest]
+            existing = [p for p in paths if p.exists()]
+            if existing:
+                return existing
+        except Exception:
+            pass
+
+    # Fallback: metadata.csv (1 per identity)
     meta_path = DATASET / "metadata.csv"
     if meta_path.exists():
         import pandas as pd
         meta = pd.read_csv(meta_path)
-        test = meta[(meta["split"] == "test") & (meta["qc"] == "ok")]
+        test = meta[(meta["split"] == "test") & (meta["qc"] == "ok")].drop_duplicates(subset=["identity"])
         paths = [DATASET / f for f in test["file"]]
         existing = [p for p in paths if p.exists()]
         if existing:
             return existing
-
-    # Fallback: bundled test samples in frontend public dir (works on Vercel & offline)
-    bundled_dir = ROOT / "app" / "frontend" / "public" / "samples"
-    if bundled_dir.exists():
-        return sorted(list(bundled_dir.glob("*/*.png")))
 
     return []
 
