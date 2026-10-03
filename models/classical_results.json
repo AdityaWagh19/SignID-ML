@@ -1,0 +1,51 @@
+{
+  "hog_svm": {
+    "val_acc": 0.8,
+    "val_top3": 0.8,
+    "val_f1": 0.76,
+    "test_acc": 0.8,
+    "test_top3": 0.8,
+    "test_f1": 0.7496,
+    "best_params": "{'svc__C': 0.1, 'svc__gamma': 'scale', 'svc__kernel': 'linear'}",
+    "train_time_s": 10.6
+  },
+  "hog_knn": {
+    "val_acc": 0.7333,
+    "val_top3": 0.7333,
+    "val_f1": 0.6711,
+    "test_acc": 0.7,
+    "test_top3": 0.7333,
+    "test_f1": 0.6252,
+    "best_params": "{'knn__n_neighbors': 3}",
+    "train_time_s": 1.5
+  },
+  "hog_lr": {
+    "val_acc": 0.7333,
+    "val_top3": 0.8,
+    "val_f1": 0.6889,
+    "test_acc": 0.7333,
+    "test_top3": 0.8,
+    "test_f1": 0.68,
+    "best_params": "{'lr__C': 0.01}",
+    "train_time_s": 25.2
+  },
+  "hog_rf": {
+    "val_acc": 0.8,
+    "val_top3": 0.8667,
+    "val_f1": 0.7581,
+    "test_acc": 0.8,
+    "test_top3": 0.8333,
+    "test_f1": 0.763,
+    "best_params": "{'rf__max_depth': None, 'rf__min_samples_leaf': 1}",
+    "train_time_s": 12.9
+  },
+  "hog_gb": {
+    "val_acc": 0.7,
+    "val_top3": 0.7,
+    "val_f1": 0.6381,
+    "test_acc": 0.7333,
+    "test_top3": 0.7333,
+    "test_f1": 0.6622,
+    "train_time_s": 165.9
+  }
+}

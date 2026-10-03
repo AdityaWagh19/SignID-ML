@@ -1,0 +1,15 @@
+numpy>=1.26,<2.0
+pandas>=2.2
+opencv-python-headless>=4.9
+pillow>=10.3
+scikit-learn>=1.4
+scikit-image>=0.23
+tensorflow-cpu>=2.16         # use tensorflow if you have a GPU
+matplotlib>=3.8
+seaborn>=0.13
+fastapi>=0.111
+uvicorn>=0.30
+python-multipart>=0.0.9
+joblib>=1.4
+google-genai>=1.0            # dataset generation only; not needed by the app
+pytest>=8.0

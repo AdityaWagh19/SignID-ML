@@ -1,0 +1,37 @@
+# API keys – NEVER commit
+.env
+*.env
+
+# Python & testing
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Node.js
+node_modules/
+app/frontend/node_modules/
+
+# Large dataset files (keep locally, not in Git)
+dataset/raw_sheets/
+dataset/crops/
+dataset/crops_sim/
+dataset/sheet_log.csv
+
+# Processed arrays and trained models (large binaries)
+data/processed/
+models/*.joblib
+models/*.keras
+models/*.h5
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+

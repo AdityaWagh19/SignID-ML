@@ -1,0 +1,21 @@
+id,group,name,form,slant,flourish,weight
+S01,enrolled,Aarav Kulkarni,Full cursive,Right,Long underline,Medium
+S02,enrolled,Diya Joshi,Initial + surname,Upright,None,Thin
+S03,enrolled,Rohan Patil,Block-printed,Upright,Dash after name,Thick
+S04,enrolled,Sneha Deshmukh,Full cursive,Left,Big loop on first letter,Thin
+S05,enrolled,Kabir Shah,"First name only, cursive",Right,Swoosh underline,Medium
+S06,enrolled,Isha Nair,Initial + scribble,Right,Long trailing tail,Thin
+S07,enrolled,Vihaan Rao,"Angular, sharp strokes",Upright,Cross-bar flourish,Medium
+S08,enrolled,Ananya Iyer,Rounded cursive,Right,Circle around surname,Medium
+S09,enrolled,Arjun Mehta,Compact and small,Upright,None,Medium
+S10,enrolled,Meera Pawar,"Large, wide cursive",Right,Double underline,Thick
+S11,enrolled,Yash Chavan,Two initials only,Right,Underline,Thick
+S12,enrolled,Neil Dsouza,Block capitals,Right,None,Thin
+S13,enrolled,Pooja More,Rounded cursive,Left,Wavy underline,Medium
+S14,enrolled,Dev Malhotra,Short quick scribble,Right,Strike-through line,Medium
+S15,enrolled,Karan Singh,Initial + wavy line,Left,Wavy tail,Medium
+U01,unknown,Mihir Apte,Cursive,Right,Underline,Medium
+U02,unknown,Zoya Khan,Printed,Upright,None,Thin
+U03,unknown,Pranav Sathe,Scribble,Right,Long tail,Thick
+U04,unknown,Leela Rane,Angular,Left,Dash,Medium
+U05,unknown,Amit Verma,Rapid cursive scribble,Right,Sharp underline loop,Medium
