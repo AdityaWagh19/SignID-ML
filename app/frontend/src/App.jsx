@@ -12,9 +12,8 @@ const api = axios.create({ baseURL: API_BASE })
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('identify') // 'identify' | 'about'
-  const [selectedModel, setSelectedModel] = useState('svm')
+  const [selectedModel, setSelectedModel] = useState('rf')
   const [availableModels, setAvailableModels] = useState([])
-  const [defaultTau] = useState(0.44)
   const tau = 0.44
 
   const [samples, setSamples] = useState([])
@@ -46,8 +45,11 @@ export default function App() {
         if (modelsRes.status === 'fulfilled') {
           const { models } = modelsRes.value.data
           setAvailableModels(models || [])
-          if (models && models.length > 0 && !models.includes('cnn')) {
-            setSelectedModel(models[0])
+          if (models && models.length > 0) {
+            // Prefer rf, then svm, then first available
+            const preferred = ['rf', 'svm']
+            const pick = preferred.find(m => models.includes(m)) || models[0]
+            setSelectedModel(pick)
           }
         }
 
@@ -68,8 +70,8 @@ export default function App() {
     initApp()
   }, [])
 
-  // Execute inference on current file with current model & threshold
-  const runInference = useCallback(async (fileToPredict, modelToUse, tauToUse) => {
+  // Execute inference on current file with current model
+  const runInference = useCallback(async (fileToPredict, modelToUse) => {
     if (!fileToPredict) return
 
     setLoading(true)
@@ -79,7 +81,7 @@ export default function App() {
       const formData = new FormData()
       formData.append('file', fileToPredict, fileToPredict.name || 'signature.png')
       formData.append('model', modelToUse || selectedModel)
-      formData.append('tau', (tauToUse ?? tau).toString())
+      formData.append('tau', tau.toString())
 
       const response = await api.post('/api/predict', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -103,7 +105,7 @@ export default function App() {
     setPreviewUrl(objectUrl)
     setResult(null)
     setError(null)
-    runInference(file, selectedModel, tau)
+    runInference(file, selectedModel)
   }
 
   // Handle sample selected from sample picker
@@ -114,11 +116,10 @@ export default function App() {
     setPreviewUrl(sample.url)
 
     try {
-      // Fetch sample as blob to pass to the prediction API
       const res = await axios.get(sample.url, { responseType: 'blob' })
       const file = new File([res.data], sample.name, { type: 'image/png' })
       setSelectedFile(file)
-      runInference(file, selectedModel, tau)
+      runInference(file, selectedModel)
     } catch (err) {
       console.error('Failed to load sample image:', err)
       setError(`Failed to fetch sample image: ${err.message}`)
@@ -138,16 +139,20 @@ export default function App() {
   const handleModelChange = (newModel) => {
     setSelectedModel(newModel)
     if (selectedFile) {
-      runInference(selectedFile, newModel, tau)
+      runInference(selectedFile, newModel)
     }
   }
 
-  // Tau is fixed at 0.44 (open-set rejection threshold)
-  const handleTauChange = () => {}
-  const handleResetTau = () => {}
-
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="app-shell">
+      {/* ── Left Sidebar ── */}
+      <Sidebar
+        selectedModel={selectedModel}
+        setSelectedModel={handleModelChange}
+        availableModels={availableModels}
+      />
+
+      {/* ── Top Bar ── */}
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -155,86 +160,45 @@ export default function App() {
         availableModelsCount={availableModels.length}
       />
 
-      {/* Main container */}
-      <main className="app-layout">
-        {/* Left Column: Sidebar Controls */}
-        <Sidebar
-          selectedModel={selectedModel}
-          setSelectedModel={handleModelChange}
-          availableModels={availableModels}
-          tau={tau}
-          setTau={handleTauChange}
-          onResetTau={handleResetTau}
-          defaultTau={defaultTau}
-        />
+      {/* ── Main Content ── */}
+      <main className="app-content">
+        {/* Error banner */}
+        {error && (
+          <div className="error-alert">
+            <RiAlertLine style={{ fontSize: '1rem', flexShrink: 0 }} />
+            <div style={{ flex: 1 }}>{error}</div>
+            <button type="button" onClick={() => setError(null)}>
+              <RiCloseLine />
+            </button>
+          </div>
+        )}
 
-        {/* Right Column: Dynamic Content Area */}
-        <section style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {error && (
-            <div
-              className="alert alert-danger alert-dismissible fade show"
-              role="alert"
-              style={{
-                borderRadius: '8px',
-                fontSize: '0.85rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                margin: 0,
-              }}
-            >
-              <RiAlertLine style={{ fontSize: '1.1rem', flexShrink: 0 }} />
-              <div style={{ flex: 1 }}>{error}</div>
-              <button
-                type="button"
-                className="btn-close"
-                aria-label="Close"
-                style={{ fontSize: '0.7rem' }}
-                onClick={() => setError(null)}
-              ></button>
-            </div>
-          )}
+        {activeTab === 'identify' ? (
+          <div className="content-grid">
+            {/* Left col: input */}
+            <UploadPanel
+              onImageSelected={handleImageSelected}
+              selectedFile={selectedFile}
+              previewUrl={previewUrl}
+              onClear={handleClear}
+              onAnalyze={() => runInference(selectedFile, selectedModel)}
+              loading={loading}
+              samples={samples}
+              selectedSample={selectedSample}
+              onSelectSample={handleSelectSample}
+            />
 
-          {activeTab === 'identify' ? (
-            <>
-              <UploadPanel
-                onImageSelected={handleImageSelected}
-                selectedFile={selectedFile}
-                previewUrl={previewUrl}
-                onClear={handleClear}
-                onAnalyze={() => runInference(selectedFile, selectedModel, tau)}
-                loading={loading}
-                samples={samples}
-                selectedSample={selectedSample}
-                onSelectSample={handleSelectSample}
-              />
-
-              <ResultPanel
-                result={result}
-                previewUrl={previewUrl}
-                loading={loading}
-              />
-            </>
-          ) : (
-            <AboutPanel />
-          )}
-        </section>
+            {/* Right col: results */}
+            <ResultPanel
+              result={result}
+              previewUrl={previewUrl}
+              loading={loading}
+            />
+          </div>
+        ) : (
+          <AboutPanel />
+        )}
       </main>
-
-      {/* Minimal Footer */}
-      <footer
-        style={{
-          marginTop: 'auto',
-          padding: '1.5rem',
-          textAlign: 'center',
-          fontSize: '0.75rem',
-          color: 'var(--muted)',
-          borderTop: '1px solid var(--border)',
-          background: 'var(--surface)',
-        }}
-      >
-        <span>Signature Identification System · Built with React & FastAPI · Clean Light Architecture</span>
-      </footer>
     </div>
   )
 }

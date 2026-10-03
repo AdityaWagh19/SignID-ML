@@ -1,5 +1,6 @@
 import React from 'react'
 import {
+  RiPenNibLine,
   RiEqualizerLine,
   RiFunctionLine,
   RiCompass3Line,
@@ -30,7 +31,7 @@ export const ALL_MODELS = [
     id: 'lr',
     name: 'Logistic Regression',
     acc: '73.3%',
-    type: 'HOG + Softmax Regression',
+    type: 'HOG + Softmax',
     tag: 'Probabilistic',
     icon: RiLineChartLine,
   },
@@ -52,56 +53,60 @@ export const ALL_MODELS = [
   },
 ]
 
-export default function Sidebar({
-  selectedModel,
-  setSelectedModel,
-  availableModels = [],
-}) {
+export default function Sidebar({ selectedModel, setSelectedModel, availableModels = [] }) {
   return (
     <aside className="app-sidebar">
-      <div className="sidebar-card">
-        <div className="sidebar-header">
-          <div className="sidebar-title">Evaluated Models</div>
-          <span className="sidebar-count">{ALL_MODELS.length} trained</span>
+      {/* Brand — sits at same height as topbar */}
+      <div className="sidebar-brand">
+        <div className="sidebar-brand-icon">
+          <RiPenNibLine />
         </div>
-        <p className="sidebar-subtitle">
-          Select a classifier to evaluate the signature:
-        </p>
+        <span>SignID</span>
+        <span className="sidebar-brand-badge">15 IDs</span>
+      </div>
 
-        <div className="sidebar-model-list">
-          {ALL_MODELS.map((m) => {
-            const Icon = m.icon
-            const isSelected = selectedModel === m.id
-            return (
-              <button
-                key={m.id}
-                type="button"
-                className={`sidebar-model-item ${isSelected ? 'active' : ''}`}
-                onClick={() => setSelectedModel(m.id)}
-              >
-                <div className="model-item-header">
-                  <div className="model-icon-box">
-                    <Icon />
-                  </div>
-                  <div className="model-item-info">
-                    <div className="model-item-title-row">
-                      <span className="model-item-name">{m.name}</span>
-                      {isSelected && <RiCheckLine className="model-check-icon" />}
+      {/* Sidebar body */}
+      <div className="sidebar-body">
+        {/* Model selector section */}
+        <div>
+          <div className="sidebar-section-label">Evaluated Models</div>
+          <div className="sidebar-model-list">
+            {ALL_MODELS.map((m) => {
+              const Icon = m.icon
+              const isSelected = selectedModel === m.id
+              const isAvailable = availableModels.length === 0 || availableModels.includes(m.id)
+              return (
+                <div key={m.id}>
+                  <button
+                    type="button"
+                    className={`sidebar-model-item ${isSelected ? 'active' : ''}`}
+                    onClick={() => isAvailable && setSelectedModel(m.id)}
+                    style={{ opacity: isAvailable ? 1 : 0.45, cursor: isAvailable ? 'pointer' : 'not-allowed' }}
+                    title={isAvailable ? m.name : `${m.name} — not loaded`}
+                  >
+                    <div className="model-icon-box">
+                      <Icon />
                     </div>
-                    <span className="model-item-tech">{m.type}</span>
+                    <div className="model-item-info">
+                      <div className="model-item-title-row">
+                        <span className="model-item-name">{m.name}</span>
+                        {isSelected && <RiCheckLine className="model-check-icon" />}
+                      </div>
+                      <span className="model-item-tech">{m.type}</span>
+                    </div>
+                  </button>
+                  {/* Acc + tag row below each button */}
+                  <div className="model-item-footer">
+                    <span className="model-acc-badge">{m.acc} Test Acc</span>
+                    <span className="model-tag-text">{m.tag}</span>
                   </div>
                 </div>
-
-                <div className="model-item-footer">
-                  <span className="model-acc-badge">{m.acc} Test Acc</span>
-                  <span className="model-tag-text">{m.tag}</span>
-                </div>
-              </button>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
 
-        {/* Quiet Security Guarantee (replaces slider) */}
+        {/* Security guarantee */}
         <div className="sidebar-security-badge">
           <div className="security-icon-wrap">
             <RiShieldCheckLine />
@@ -109,7 +114,7 @@ export default function Sidebar({
           <div>
             <div className="security-title">Open-Set Rejection Active</div>
             <div className="security-desc">
-              Calibrated safety threshold (τ = 0.44). Unauthorized impostors are rejected automatically.
+              Calibrated safety threshold τ = 0.44. Impostors are rejected automatically.
             </div>
           </div>
         </div>

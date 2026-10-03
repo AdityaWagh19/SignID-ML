@@ -1,56 +1,41 @@
 import React from 'react'
-import { RiPenNibLine, RiDashboardLine, RiInformationLine } from 'react-icons/ri'
+import { RiDashboardLine, RiInformationLine } from 'react-icons/ri'
 
 export default function Navbar({ activeTab, setActiveTab, backendStatus, availableModelsCount }) {
   return (
-    <header className="app-navbar">
-      <div className="brand">
-        <RiPenNibLine className="brand-icon" />
-        <span>SignID</span>
-        <span className="navbar-badge">15 identities</span>
+    <header className="app-topbar">
+      {/* Page title */}
+      <div className="topbar-page-title">
+        {activeTab === 'identify' ? 'Signature Identification' : 'Methodology'}
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-        <nav className="nav-tabs-group">
-          <button
-            type="button"
-            className={`nav-btn ${activeTab === 'identify' ? 'active' : ''}`}
-            onClick={() => setActiveTab('identify')}
-          >
-            <RiDashboardLine style={{ fontSize: '1rem' }} />
-            <span>Identify</span>
-          </button>
-          <button
-            type="button"
-            className={`nav-btn ${activeTab === 'about' ? 'active' : ''}`}
-            onClick={() => setActiveTab('about')}
-          >
-            <RiInformationLine style={{ fontSize: '1rem' }} />
-            <span>Methodology</span>
-          </button>
-        </nav>
+      {/* Nav tabs */}
+      <nav className="nav-tabs-group">
+        <button
+          type="button"
+          className={`nav-btn ${activeTab === 'identify' ? 'active' : ''}`}
+          onClick={() => setActiveTab('identify')}
+        >
+          <RiDashboardLine style={{ fontSize: '0.95rem' }} />
+          <span>Identify</span>
+        </button>
+        <button
+          type="button"
+          className={`nav-btn ${activeTab === 'about' ? 'active' : ''}`}
+          onClick={() => setActiveTab('about')}
+        >
+          <RiInformationLine style={{ fontSize: '0.95rem' }} />
+          <span>Methodology</span>
+        </button>
+      </nav>
 
-        <div style={{
-          borderLeft: '1px solid var(--border)',
-          paddingLeft: '1rem',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 6,
-          fontSize: '0.72rem',
-          color: 'var(--muted)',
-        }}>
-          <span style={{
-            width: 7,
-            height: 7,
-            borderRadius: '50%',
-            background: backendStatus === 'online' ? 'var(--success)' : 'var(--danger)',
-            display: 'inline-block',
-          }} />
-          {backendStatus === 'online'
-            ? `API · ${availableModelsCount} model${availableModelsCount !== 1 ? 's' : ''}`
-            : 'API offline'
-          }
-        </div>
+      {/* API status */}
+      <div className="status-pill">
+        <span className={`status-dot ${backendStatus === 'online' ? 'online' : ''}`} />
+        {backendStatus === 'online'
+          ? `API · ${availableModelsCount} model${availableModelsCount !== 1 ? 's' : ''}`
+          : 'API offline'
+        }
       </div>
     </header>
   )
