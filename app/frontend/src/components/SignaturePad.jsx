@@ -39,7 +39,7 @@ export default function SignaturePad({
 
     // Default pen styling
     ctx.strokeStyle = '#0f172a'
-    ctx.lineWidth = 3
+    ctx.lineWidth = 3.5
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
 
@@ -94,10 +94,6 @@ export default function SignaturePad({
     if (lastPoint) {
       ctx.beginPath()
       ctx.moveTo(lastPoint.x, lastPoint.y)
-      // Midpoint interpolation for smooth curve
-      const midX = (lastPoint.x + coords.x) / 2
-      const midY = (lastPoint.y + coords.y) / 2
-      ctx.quadraticCurveTo(lastPoint.x, lastPoint.y, midX, midY)
       ctx.lineTo(coords.x, coords.y)
       ctx.stroke()
     }
@@ -214,7 +210,7 @@ export default function SignaturePad({
                 <strong>How to test live in front of reviewers:</strong>
                 <ul style={{ margin: '4px 0 0 16px', padding: 0, fontSize: '0.75rem', lineHeight: 1.5 }}>
                   <li><strong>Authentic match:</strong> Try sketching one of the registered signatures below (e.g. <code>S01</code> or <code>S02</code>) to see the system recognize it.</li>
-                  <li><strong>Impostor rejection:</strong> Scribble any random name or unlearned pattern to see the calibrated threshold ($\tau = 0.44$) trigger <em>"Below threshold — rejected"</em>!</li>
+                  <li><strong>Impostor rejection:</strong> Scribble any random name or unlearned pattern to see the calibrated threshold ($\tau = 0.25$) trigger <em>"Below threshold — rejected"</em>!</li>
                 </ul>
               </div>
             </div>

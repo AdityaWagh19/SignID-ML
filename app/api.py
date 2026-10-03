@@ -112,10 +112,10 @@ def health():
 def get_models():
     """List models that are trained and available."""
     available = _available_models()
-    default_tau = 0.50
+    default_tau = 0.25
     threshold_path = MODELS / "threshold.json"
     if threshold_path.exists():
-        default_tau = json.load(open(threshold_path)).get("tau", 0.50)
+        default_tau = json.load(open(threshold_path)).get("tau", 0.25)
     return {"models": available, "default_tau": round(default_tau, 3)}
 
 
@@ -154,7 +154,8 @@ async def predict(
     """Run inference on an uploaded signature image.
 
     Returns:
-        prediction  : str   — student ID or "Not recognised"
+        prediction  : str   — student ID or "Uncertain (Sxx)"
+        candidate   : str   — closest identity
         confidence  : float — max softmax probability
         recognised  : bool
         top3        : list  — [{id, confidence}]
@@ -166,13 +167,24 @@ async def predict(
     if model not in _ALLOWED:
         raise HTTPException(status_code=400, detail=f"Unknown model '{model}'. Choose from {_ALLOWED}")
 
-    # Read image
+    # Read image (support PNG transparency / RGBA)
     contents = await file.read()
     raw = np.frombuffer(contents, np.uint8)
-    img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
-    if img is None or min(img.shape[:2]) < 32:
-        raise HTTPException(status_code=422,
-                            detail="Could not decode image or image too small (< 32px)")
+    img = cv2.imdecode(raw, cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise HTTPException(status_code=422, detail="Could not decode image file")
+
+    # If image has alpha channel (RGBA), blend onto pure white background
+    if img.ndim == 3 and img.shape[2] == 4:
+        alpha = img[:, :, 3].astype(np.float32) / 255.0
+        bgr = img[:, :, :3].astype(np.float32)
+        white_bg = np.ones_like(bgr) * 255.0
+        img = (bgr * alpha[..., np.newaxis] + white_bg * (1.0 - alpha[..., np.newaxis])).astype(np.uint8)
+    elif img.ndim == 2:
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+
+    if min(img.shape[:2]) < 16:
+        raise HTTPException(status_code=422, detail="Image too small (< 16px)")
 
     try:
         predictor = _get_predictor(model)
@@ -201,6 +213,7 @@ async def predict(
 
     return {
         "prediction":   result["prediction"],
+        "candidate":    result.get("candidate", result["prediction"]),
         "confidence":   round(result["confidence"], 4),
         "recognised":   result["recognised"],
         "top3": [

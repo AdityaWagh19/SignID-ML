@@ -14,7 +14,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('identify') // 'identify' | 'about'
   const [selectedModel, setSelectedModel] = useState('rf')
   const [availableModels, setAvailableModels] = useState([])
-  const tau = 0.44
+  const tau = 0.25
 
   const [samples, setSamples] = useState([])
   const [selectedSample, setSelectedSample] = useState(null)

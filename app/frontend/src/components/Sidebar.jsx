@@ -68,7 +68,7 @@ export default function Sidebar({ selectedModel, setSelectedModel, availableMode
           <RiShieldCheckLine className="security-icon" />
           <div>
             <div className="security-title">Open-Set Rejection</div>
-            <div className="security-desc">τ = 0.44 — impostors auto-rejected</div>
+            <div className="security-desc">τ = 0.25 — open-set rejection cutoff</div>
           </div>
         </div>
       </div>

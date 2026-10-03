@@ -1,17 +1,17 @@
 import React from 'react'
 import { RiCheckLine, RiAlertLine, RiSearchEyeLine } from 'react-icons/ri'
 
-const DEFAULT_TAU = 0.44
+const DEFAULT_TAU = 0.25
 
 export default function ResultPanel({ result, previewUrl, loading }) {
   if (loading) {
     return (
-      <div className="app-card" style={{ minHeight: 360, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="app-card" style={{ minHeight: 280, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div className="spinner-wrap">
           <div className="spinner-border" role="status" style={{ color: 'var(--accent)', width: '2rem', height: '2rem' }}>
             <span className="visually-hidden">Loading…</span>
           </div>
-          <div style={{ fontWeight: 500, color: 'var(--text)' }}>Processing…</div>
+          <div style={{ fontWeight: 500, color: 'var(--text)' }}>Analyzing signature across models…</div>
         </div>
       </div>
     )
@@ -19,24 +19,26 @@ export default function ResultPanel({ result, previewUrl, loading }) {
 
   if (!result) {
     return (
-      <div className="app-card empty-state" style={{ minHeight: 360 }}>
+      <div className="app-card empty-state" style={{ minHeight: 220 }}>
         <RiSearchEyeLine className="empty-icon" />
-        <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: 8, color: 'var(--text)' }}>
-          No signature yet
+        <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: 6, color: 'var(--text)' }}>
+          No signature analyzed yet
         </div>
         <p className="empty-hint">
-          Upload an image or pick one from the dataset samples to run identification.
+          Draw a signature, upload an image, or click one of the benchmark samples above to view classification results.
         </p>
       </div>
     )
   }
 
-  const { prediction, confidence, recognised, top3, preprocessed_b64, model_used, ms, all_models } = result
+  const { prediction, candidate, confidence, recognised, top3, preprocessed_b64, model_used, ms, all_models } = result
   const tau = DEFAULT_TAU
   const confPct = Math.round(confidence * 1000) / 10
+  const candidateId = candidate || top3?.[0]?.id || prediction
 
   return (
     <div className="app-card">
+      <div className="card-label">Classification Results</div>
 
       {/* Result Banner */}
       <div className={`result-banner ${recognised ? 'recognised' : 'unknown'}`}>
@@ -45,10 +47,10 @@ export default function ResultPanel({ result, previewUrl, loading }) {
         </div>
         <div className="result-body">
           <div className="result-sublabel">
-            {recognised ? 'Identity matched' : 'Below threshold — rejected'}
+            {recognised ? 'Verified Identity' : `Below rejection threshold (τ = ${tau.toFixed(2)})`}
           </div>
           <div className={`result-id ${recognised ? '' : 'unknown'}`}>
-            {prediction}
+            {recognised ? prediction : `Closest: ${candidateId}`}
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
@@ -144,7 +146,7 @@ export default function ResultPanel({ result, previewUrl, loading }) {
                     <span className="mrc-name">{m.name}</span>
                     {isActive && <span className="mrc-active-badge">selected</span>}
                   </div>
-                  <div className="mrc-pred">{m.prediction}</div>
+                  <div className="mrc-pred">{m.candidate || m.raw_pred || m.prediction}</div>
                   <div className="mrc-bar-wrap">
                     <div className="mrc-bar">
                       <div
@@ -155,7 +157,7 @@ export default function ResultPanel({ result, previewUrl, loading }) {
                     <span className="mrc-pct">{mPct}%</span>
                   </div>
                   <span className={`mrc-verdict ${m.recognised ? 'ok' : 'rej'}`}>
-                    {m.recognised ? '✓ Recognised' : '✗ Rejected'}
+                    {m.recognised ? '✓ Matched' : '✗ Below τ'}
                   </span>
                 </div>
               )

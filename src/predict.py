@@ -51,12 +51,12 @@ class Predictor:
             self.classes = {int(k): str(v) for k, v in raw_map.items()}
         self.n_classes = len(self.classes)
 
-        self.tau = 0.44
+        self.tau = 0.25
         if threshold_path.exists():
             try:
-                self.tau = float(json.load(open(threshold_path)).get("tau", 0.44))
+                self.tau = float(json.load(open(threshold_path)).get("tau", 0.25))
             except Exception:
-                self.tau = 0.44
+                self.tau = 0.25
 
         # Load models
         if self.model_type == "svm":
@@ -114,8 +114,8 @@ class Predictor:
     def _calibrate_probs(self, raw_probs: np.ndarray) -> np.ndarray:
         """Apply temperature calibration for SVM/GB to prevent artificial multiclass flattening."""
         if self.model_type in ("svm", "gb"):
-            # Temperature scaling T = 0.55
-            logits = np.log(np.maximum(raw_probs, 1e-7)) / 0.55
+            # Temperature scaling T = 0.35 provides sharp calibrated discrimination
+            logits = np.log(np.maximum(raw_probs, 1e-7)) / 0.35
             exp_l = np.exp(logits - logits.max())
             return exp_l / exp_l.sum()
         return raw_probs
@@ -123,6 +123,16 @@ class Predictor:
     def identify(self, img_bgr: np.ndarray) -> dict:
         """Identify the signer of a signature image."""
         arr = preprocess_signature(img_bgr)
+        ink_count = int(np.sum(arr > 0))
+        if ink_count < 15:
+            return {
+                "prediction":   "No signature detected",
+                "candidate":    "None",
+                "confidence":   0.0,
+                "top3":         [(self.classes.get(i, f"S{i+1:02d}"), 0.0) for i in range(min(3, self.n_classes))],
+                "recognised":   False,
+                "preprocessed": arr,
+            }
 
         if self.model_type in self._CLASSICAL:
             x = arr[np.newaxis, ..., np.newaxis]
@@ -139,7 +149,8 @@ class Predictor:
         recognised = max_conf >= self.tau
 
         return {
-            "prediction":   top3[0][0] if recognised else "Not recognised",
+            "prediction":   top3[0][0] if recognised else f"Uncertain ({top3[0][0]})",
+            "candidate":    top3[0][0],
             "confidence":   max_conf,
             "top3":         top3,
             "recognised":   recognised,
@@ -147,9 +158,13 @@ class Predictor:
         }
 
 
-def identify_all_models(img_bgr: np.ndarray, tau: float = 0.44) -> list:
+def identify_all_models(img_bgr: np.ndarray, tau: float = 0.25) -> list:
     """Run all available classical models on the same image using a single HOG extraction."""
     arr = preprocess_signature(img_bgr)
+    ink_count = int(np.sum(arr > 0))
+    if ink_count < 15:
+        return []
+
     x = arr[np.newaxis, ..., np.newaxis]
     feats = hog_features(x)
 
@@ -181,7 +196,7 @@ def identify_all_models(img_bgr: np.ndarray, tau: float = 0.44) -> list:
             m = joblib.load(p)
             raw_p = m.predict_proba(feats)[0]
             if m_id in ("svm", "gb"):
-                logits = np.log(np.maximum(raw_p, 1e-7)) / 0.55
+                logits = np.log(np.maximum(raw_p, 1e-7)) / 0.35
                 exp_l = np.exp(logits - logits.max())
                 probs = exp_l / exp_l.sum()
             else:
@@ -196,7 +211,8 @@ def identify_all_models(img_bgr: np.ndarray, tau: float = 0.44) -> list:
                 "id": m_id,
                 "name": name,
                 "accuracy": acc,
-                "prediction": pred_id if rec else "Not recognised",
+                "prediction": pred_id if rec else f"Uncertain ({pred_id})",
+                "candidate": pred_id,
                 "raw_pred": pred_id,
                 "confidence": round(conf, 4),
                 "recognised": rec,
