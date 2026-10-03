@@ -169,29 +169,18 @@ export default function SignaturePad({
 
       {/* Control bar */}
       <div className="signature-controls">
-        <div className="signature-stats">
-          {hasDrawn ? (
-            <span className="signature-badge active">
-              <RiCheckLine /> {strokeCount} stroke{strokeCount !== 1 ? 's' : ''} captured
-            </span>
-          ) : (
-            <span className="signature-badge">
-              <RiPencilLine /> Ready to draw
-            </span>
-          )}
-        </div>
+        <span className={`signature-badge ${hasDrawn ? 'active' : ''}`}>
+          {hasDrawn ? `${strokeCount} stroke${strokeCount !== 1 ? 's' : ''}` : 'Draw to begin'}
+        </span>
 
-        <div style={{ display: 'flex', gap: '8px' }}>
+        <div style={{ display: 'flex', gap: '6px' }}>
           <button
             type="button"
             className="btn btn-outline-secondary btn-sm"
             onClick={handleClear}
             disabled={!hasDrawn || loading}
-            title="Clear drawing pad"
-            style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.8rem', padding: '6px 12px' }}
           >
-            <RiEraserLine />
-            <span>Clear</span>
+            Clear
           </button>
 
           <button
@@ -199,17 +188,9 @@ export default function SignaturePad({
             className="btn btn-primary btn-sm"
             onClick={handleIdentify}
             disabled={!hasDrawn || loading}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              fontWeight: 600,
-              fontSize: '0.82rem',
-              padding: '6px 16px',
-            }}
           >
             <RiSearchEyeLine />
-            <span>{loading ? 'Analyzing…' : 'Identify Live Signature'}</span>
+            {loading ? 'Analyzing…' : 'Identify'}
           </button>
         </div>
       </div>
