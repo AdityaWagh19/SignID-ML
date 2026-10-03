@@ -12,6 +12,7 @@ const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
 const api = axios.create({ baseURL: API_BASE })
 
 export default function App() {
+  // 1 benchmark sample per identity (20 total: 15 enrolled + 5 unknown)
   const [activeTab, setActiveTab] = useState('identify') // 'identify' | 'about'
   const [selectedModel, setSelectedModel] = useState('rf')
   const [availableModels, setAvailableModels] = useState([])
