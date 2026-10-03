@@ -11,22 +11,22 @@ export default function Navbar({ activeTab, setActiveTab, backendStatus, availab
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-        <nav className="navbar-nav">
+        <nav className="nav-tabs-group">
           <button
             type="button"
             className={`nav-btn ${activeTab === 'identify' ? 'active' : ''}`}
             onClick={() => setActiveTab('identify')}
           >
-            <RiDashboardLine style={{ marginRight: 5 }} />
-            Identify
+            <RiDashboardLine style={{ fontSize: '1rem' }} />
+            <span>Identify</span>
           </button>
           <button
             type="button"
             className={`nav-btn ${activeTab === 'about' ? 'active' : ''}`}
             onClick={() => setActiveTab('about')}
           >
-            <RiInformationLine style={{ marginRight: 5 }} />
-            Methodology
+            <RiInformationLine style={{ fontSize: '1rem' }} />
+            <span>Methodology</span>
           </button>
         </nav>
 

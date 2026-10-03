@@ -66,21 +66,45 @@ body {
   font-weight: 600;
   letter-spacing: 0.03em;
 }
-.navbar-nav { display: flex; gap: 4px; }
-.nav-btn {
-  padding: 6px 16px;
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  font-size: 0.875rem;
-  font-family: var(--font);
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.15s;
+.nav-tabs-group,
+.navbar-nav {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 8px !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
-.nav-btn:hover { background: var(--bg); color: var(--text); }
-.nav-btn.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+.nav-btn {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+  padding: 7px 16px !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: var(--muted) !important;
+  font-size: 0.875rem !important;
+  font-family: var(--font) !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  white-space: nowrap !important;
+  line-height: 1.2 !important;
+}
+.nav-btn:hover {
+  background: var(--bg) !important;
+  color: var(--text) !important;
+}
+.nav-btn.active {
+  background: var(--accent-light) !important;
+  color: var(--accent) !important;
+  font-weight: 600 !important;
+  border-color: var(--accent-mid) !important;
+}
 
 /* ── Layout ─────────────────────────────────────────────── */
 .app-layout {
@@ -209,7 +233,8 @@ input[type=range] {
 
 /* ── Input tabs ─────────────────────────────────────────── */
 .input-tabs {
-  display: flex;
+  display: flex !important;
+  flex-direction: row !important;
   gap: 0;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -218,7 +243,7 @@ input[type=range] {
 }
 .input-tab {
   flex: 1;
-  padding: 9px;
+  padding: 9px 8px;
   border: none;
   background: var(--surface);
   color: var(--muted);
@@ -231,8 +256,9 @@ input[type=range] {
   gap: 6px;
   transition: all 0.15s;
   font-weight: 500;
+  white-space: nowrap;
 }
-.input-tab:first-child { border-right: 1px solid var(--border); }
+.input-tab:not(:last-child) { border-right: 1px solid var(--border); }
 .input-tab.active { background: var(--accent); color: #fff; font-weight: 600; }
 .input-tab:hover:not(.active) { background: var(--bg); color: var(--text); }
 
