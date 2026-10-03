@@ -3,6 +3,15 @@ import { RiCheckLine, RiAlertLine, RiSearchEyeLine } from 'react-icons/ri'
 
 const DEFAULT_TAU = 0.25
 
+// Safely format confidence to a 0.0% – 100.0% range
+function formatConfidencePct(val) {
+  if (val == null || isNaN(val)) return 0
+  const num = Number(val)
+  // If value is already in 0–100 range (e.g. 14.54), keep as is; if 0–1 decimal (e.g. 0.95), scale by 100
+  const pct = num > 1.0 ? num : num * 100
+  return Math.min(100, Math.max(0, Math.round(pct * 10) / 10))
+}
+
 export default function ResultPanel({ result, previewUrl, loading }) {
   if (loading) {
     return (
@@ -33,7 +42,7 @@ export default function ResultPanel({ result, previewUrl, loading }) {
 
   const { prediction, candidate, confidence, recognised, top3, preprocessed_b64, model_used, ms, all_models } = result
   const tau = DEFAULT_TAU
-  const confPct = Math.round(confidence * 1000) / 10
+  const confPct = formatConfidencePct(confidence)
   const candidateId = candidate || top3?.[0]?.id || prediction
 
   return (
@@ -104,7 +113,7 @@ export default function ResultPanel({ result, previewUrl, loading }) {
             </thead>
             <tbody>
               {top3.map((item, idx) => {
-                const pct = Math.round(item.confidence * 1000) / 10
+                const pct = formatConfidencePct(item.confidence)
                 return (
                   <tr key={item.id}>
                     <td className="top3-rank">{idx + 1}</td>
@@ -135,7 +144,7 @@ export default function ResultPanel({ result, previewUrl, loading }) {
           </div>
           <div className="all-models-grid">
             {all_models.map((m) => {
-              const mPct = Math.round(m.confidence * 1000) / 10
+              const mPct = formatConfidencePct(m.confidence)
               const isActive = m.id === model_used
               return (
                 <div

@@ -142,6 +142,11 @@ class Predictor:
             x = arr[np.newaxis, ..., np.newaxis]
             probs = self._model.predict(x, verbose=0)[0]
 
+        probs = np.asarray(probs, dtype=np.float64)
+        if probs.sum() > 0:
+            probs = probs / probs.sum()
+        probs = np.clip(probs, 0.0, 1.0)
+
         top_idx = np.argsort(-probs)[:3]
         top3 = [(self.classes.get(int(i), f"S{int(i)+1:02d}"), float(probs[i])) for i in top_idx]
 
@@ -151,7 +156,7 @@ class Predictor:
         return {
             "prediction":   top3[0][0] if recognised else f"Uncertain ({top3[0][0]})",
             "candidate":    top3[0][0],
-            "confidence":   max_conf,
+            "confidence":   round(max_conf, 4),
             "top3":         top3,
             "recognised":   recognised,
             "preprocessed": arr,
@@ -201,6 +206,11 @@ def identify_all_models(img_bgr: np.ndarray, tau: float = 0.25) -> list:
                 probs = exp_l / exp_l.sum()
             else:
                 probs = raw_p
+
+            probs = np.asarray(probs, dtype=np.float64)
+            if probs.sum() > 0:
+                probs = probs / probs.sum()
+            probs = np.clip(probs, 0.0, 1.0)
 
             top1_idx = int(probs.argmax())
             conf = float(probs[top1_idx])

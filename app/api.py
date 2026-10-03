@@ -233,10 +233,10 @@ async def predict(
         return {
             "prediction":   result["prediction"],
             "candidate":    result.get("candidate", result["prediction"]),
-            "confidence":   round(result["confidence"], 4),
+            "confidence":   round(float(min(1.0, max(0.0, result["confidence"]))), 4),
             "recognised":   result["recognised"],
             "top3": [
-                {"id": sid, "confidence": round(conf, 4)}
+                {"id": sid, "confidence": round(float(min(1.0, max(0.0, conf))), 4)}
                 for sid, conf in result["top3"]
             ],
             "all_models":   all_models,
