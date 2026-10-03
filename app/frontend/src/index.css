@@ -524,3 +524,153 @@ input[type=range] {
 /* ── Misc ───────────────────────────────────────────────── */
 .text-muted-sm { font-size: 0.75rem; color: var(--muted); }
 .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+/* ── Interactive Signature Pad ──────────────────────────── */
+.signature-pad-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.signature-pad-wrapper {
+  position: relative;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  overflow: hidden;
+  transition: border-color 0.2s;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+.signature-pad-wrapper:hover,
+.signature-pad-wrapper:focus-within {
+  border-color: var(--accent-mid);
+}
+.signature-canvas {
+  cursor: crosshair;
+  background: #ffffff;
+}
+.canvas-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-weight: 500;
+  pointer-events: none;
+  user-select: none;
+}
+.signature-baseline-guide {
+  position: absolute;
+  bottom: 45px;
+  left: 20px;
+  right: 20px;
+  border-bottom: 1px dashed rgba(148, 163, 184, 0.35);
+  pointer-events: none;
+}
+.signature-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.signature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+.signature-badge.active {
+  color: var(--accent);
+  background: var(--accent-light);
+  border-color: rgba(37, 99, 235, 0.25);
+}
+
+/* ── Live Demo Reference Guide ─────────────────────────── */
+.live-demo-hints {
+  margin-top: 4px;
+}
+.demo-hints-toggle {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 0;
+  transition: opacity 0.15s;
+}
+.demo-hints-toggle:hover {
+  text-decoration: underline;
+}
+.demo-guide-card {
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.demo-guide-desc {
+  display: flex;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+.demo-guide-thumbs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.demo-guide-thumb-card {
+  flex-shrink: 0;
+  width: 58px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+.demo-guide-thumb-card img {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px;
+}
+.demo-guide-thumb-card span {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+/* ── Camera Viewfinder ──────────────────────────────────── */
+.camera-viewfinder {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.camera-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
