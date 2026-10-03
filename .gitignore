@@ -20,11 +20,12 @@ dataset/crops/
 dataset/crops_sim/
 dataset/sheet_log.csv
 
-# Processed arrays and trained models (large binaries)
-data/processed/
-models/*.joblib
+# Model artifacts — classical models ARE committed (needed for Vercel serverless)
+# CNN weights are too large / require tensorflow not available on Vercel
 models/*.keras
 models/*.h5
+models/classical_results.json
+models/cnn_history.json
 
 # Jupyter checkpoints
 .ipynb_checkpoints/

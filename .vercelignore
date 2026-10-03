@@ -1,11 +1,13 @@
-# Python backend — Vercel only needs the frontend
-requirements.txt
-app/__init__.py
-app/api.py
-data/
-models/
-reports/
-dataset/
+# Large data files Vercel doesn't need
+data/processed/
+dataset/raw_sheets/
+dataset/crops/
+dataset/crops_sim/
 docs/
-pytest.ini
+reports/figures/
+
+# Python cache
+__pycache__/
+*.pyc
+.pytest_cache/
 tests/

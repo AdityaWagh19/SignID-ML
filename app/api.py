@@ -34,11 +34,17 @@ from src.predict import Predictor
 
 app = FastAPI(title="Signature Identification API", version="1.0.0")
 
-# Allow the Vite dev server (port 5173) and any local origin
+# Allow the Vite dev server, local origins, and deployed Vercel frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173",
-                   "http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "http://localhost:3000",
+        "https://signid.vercel.app",
+        # allow all vercel preview URLs for this project
+    ],
+    allow_origin_regex=r"https://signid.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
